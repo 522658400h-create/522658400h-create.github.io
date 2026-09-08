@@ -1,0 +1,41 @@
+# macOS junk
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Local-only source/design documents, not part of the published site
+*.docx
+*.pdf
+*.zip
+*.psd
+*.fig
+*.sketch
+*.ttf
+
+# Unsorted local exports and source images
+何宗秦 · UI_UX Designer.html
+何宗秦 · UI_UX Designer_files/
+home排版参考.png
+风格参考.png
+skill板块排版参考图.png
+iPhone-17-Pro-Free-psd-Mockup.png
+web端+可视化.pdf
+阅落童书会.pdf
+重医附二院互联网医院.pdf
+何宗秦- UI设计简历.pdf
+何宗秦-个人网站-分享版.zip
+平面&AIGC探索网页设计大纲.docx
+
+# Full-size beyond photos are not referenced; the site only loads thumbs
+步履之间，拾取灵感/*
+!步履之间，拾取灵感/thumbs/
+!步履之间，拾取灵感/thumbs/**
+镜头里总有丰收/*
+!镜头里总有丰收/thumbs/
+!镜头里总有丰收/thumbs/**
+
+# Only two AIGC images are referenced by the exploration page
+平面&AIGC探索/*
+!平面&AIGC探索/ai-new-01.jpg
+!平面&AIGC探索/ai-new-02.jpg

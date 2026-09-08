@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="平面设计 &amp; AIGC 探索 · AI 辅助设计工作流案例" />
+  <title>平面 &amp; AIGC 探索 · 何宗秦</title>
+  <style>
+    *,
+    *::before,
+    *::after { box-sizing: border-box; }
+
+    :root {
+      --bg: #F5F0E1;
+      --paper: #fffdf7;
+      --ink: #15172B;
+      --ink-soft: #4A4D6B;
+      --muted: #898AA5;
+      --purple: #6E5BFF;
+      --purple-deep: #4A3FCC;
+      --lime: #C4F471;
+      --pink: #FF9EBB;
+      --yellow: #FFD66B;
+      --line: #15172B;
+      --radius-sm: 12px;
+      --radius-md: 20px;
+      --radius-lg: 28px;
+      --radius-xl: 40px;
+      --shadow-soft: 0 6px 24px rgba(21, 23, 43, 0.08);
+      --shadow-pop: 0 10px 30px rgba(21, 23, 43, 0.12);
+      --ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background-color: #fcfcff;
+      background-image:
+        radial-gradient(ellipse at top left, rgba(200, 170, 255, 0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at top right, rgba(255, 200, 230, 0.15) 0%, transparent 55%),
+        radial-gradient(ellipse at bottom left, rgba(220, 190, 255, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at bottom right, rgba(255, 220, 240, 0.10) 0%, transparent 60%);
+      font-family: "Plus Jakarta Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    p, h1, h2, h3, h4, h5 { margin: 0; }
+    h1, h2, h3 { line-height: 1.08; letter-spacing: -0.02em; }
+
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* 顶部通栏 */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 14px 0;
+      background: rgba(255, 253, 247, 0.86);
+      border-bottom: 2px solid var(--line);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .topbar__inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 18px;
+    }
+    .topbar__back {
+      justify-self: start;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 40px;
+      padding: 0 16px;
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      transition: transform .25s var(--ease), background .25s var(--ease);
+    }
+    .topbar__back:hover { transform: translateY(-2px); background: var(--lime); }
+    .topbar__brand {
+      justify-self: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+    .topbar__brand i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--purple);
+      box-shadow: 0 0 0 3px var(--lime);
+    }
+    .topbar__progress {
+      justify-self: end;
+      min-width: 68px;
+      padding: 7px 11px;
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+      font-size: 12px;
+      font-weight: 800;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 首屏 */
+    .case-hero {
+      padding: 92px 0 74px;
+      position: relative;
+      overflow: hidden;
+    }
+    .case-hero__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);
+      gap: clamp(36px, 5vw, 84px);
+      align-items: center;
+    }
+    .case-hero__tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 14px;
+      margin-bottom: 22px;
+      background: var(--lime);
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+    .case-hero__tag i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--purple);
+      box-shadow: 0 0 0 3px #fff;
+    }
+    .case-hero__title {
+      max-width: 880px;
+      font-size: clamp(42px, 6.4vw, 86px);
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      line-height: 1.02;
+      margin-bottom: 24px;
+    }
+    .case-hero__title span {
+      position: relative;
+      display: inline-block;
+      color: var(--purple);
+    }
+    .case-hero__title span::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 6px;
+      height: 16px;
+      background: var(--lime);
+      z-index: -1;
+      border-radius: 5px;
+    }
+    .case-hero__intro {
+      max-width: 640px;
+      color: var(--ink-soft);
+      font-size: 17px;
+      line-height: 1.9;
+      margin-bottom: 30px;
+    }
+    .case-hero__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 42px;
+    }
+    .case-hero__tags span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 31px;
+      padding: 4px 12px;
+      background: #fff;
+      border: 1.5px solid var(--line);
+      border-radius: 7px;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+    .case-hero__tags span::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--purple);
+    }
+
+    /* 首屏右侧 AI 图墙 */
+    .hero-art {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      min-height: 300px;
+      filter: drop-shadow(14px 20px 0 rgba(21, 23, 43, 0.12));
+    }
+    .hero-art__bg {
+      position: absolute;
+      left: 7%;
+      top: 8%;
+      right: 7%;
+      bottom: 8%;
+      border: 2px solid var(--line);
+      border-radius: 38px;
+      background:
+        repeating-linear-gradient(0deg, rgba(21, 23, 43, 0.06) 0 1px, transparent 1px 30px),
+        repeating-linear-gradient(90deg, rgba(21, 23, 43, 0.06) 0 1px, transparent 1px 30px);
+      transform: rotate(8deg);
+    }
+    .hero-art__card {
+      position: absolute;
+      display: block;
+      border: 2px solid var(--line);
+      border-radius: 30px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 22px 40px rgba(21, 23, 43, 0.2);
+      transition: transform .28s var(--ease), box-shadow .28s var(--ease);
+    }
+    .hero-art__card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .hero-art__card--main {
+      z-index: 3;
+      inset: 1% 0 1% -8%;
+      transform: rotate(-5deg);
+      cursor: pointer;
+    }
+    .hero-art__card--main:hover {
+      z-index: 5;
+      transform: rotate(-5deg) translateY(-4px);
+      box-shadow: 6px 8px 0 var(--line);
+    }
+    .hero-art__card--second {
+      z-index: 2;
+      inset: 2% -7% 2% 1%;
+      transform: rotate(6deg);
+      cursor: pointer;
+    }
+    .hero-art__card--second:hover {
+      z-index: 4;
+      transform: rotate(6deg) translateY(-4px);
+      box-shadow: 6px 8px 0 var(--line);
+    }
+    .section {
+      padding: 88px 0;
+      position: relative;
+    }
+    .section--paper {
+      background: var(--paper);
+      border-top: 2px solid var(--line);
+      border-bottom: 2px solid var(--line);
+    }
+    .section--dark {
+      background: var(--ink);
+      color: #fff;
+      border-top: 2px solid var(--line);
+      border-bottom: 2px solid var(--line);
+    }
+
+    .section__head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 480px);
+      align-items: end;
+      column-gap: clamp(24px, 3vw, 52px);
+      margin-bottom: 48px;
+    }
+    .section__kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 6px 13px;
+      background: var(--lime);
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .section--dark .section__kicker { background: var(--lime); color: var(--ink); }
+    .section__title {
+      font-size: clamp(32px, 4.6vw, 56px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+    .section__title em {
+      font-style: normal;
+      color: var(--purple);
+      position: relative;
+    }
+    .section__title em::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 5px;
+      height: 10px;
+      background: var(--lime);
+      z-index: -1;
+      border-radius: 3px;
+    }
+    .section--dark .section__title em { color: var(--lime); }
+    .section--dark .section__title em::after { background: var(--purple); }
+    .section__desc {
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .section--dark .section__desc { color: rgba(255, 255, 255, 0.68); }
+
+    .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 34px;
+      padding: 0 12px;
+      border: 2px solid var(--line);
+      border-radius: 10px;
+      background: var(--purple);
+      color: #fff;
+      font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      transform: skewX(-6deg);
+    }
+    .num span { display: block; transform: skewX(6deg); }
+
+    /* 能力 */
+    .abilities-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .ability-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 232px;
+      padding: 26px;
+      background: #fff;
+      border: 2px solid var(--line);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      transition: transform .28s var(--ease), box-shadow .28s var(--ease);
+    }
+    .ability-card:hover { transform: translateY(-4px); box-shadow: 6px 8px 0 var(--line); }
+    .ability-card::after {
+      content: attr(data-index);
+      position: absolute;
+      right: 12px;
+      bottom: -12px;
+      font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+      font-size: 86px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--line);
+      opacity: .05;
+      pointer-events: none;
+    }
+    .ability-card__icon {
+      width: 46px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      border: 2px solid var(--line);
+      border-radius: 13px;
+      color: var(--ink);
+    }
+    .ability-card__icon svg {
+      width: 22px;
+      height: 22px;
+    }
+    .ability-card:nth-child(1) .ability-card__icon { background: var(--lime); }
+    .ability-card:nth-child(2) .ability-card__icon { background: var(--yellow); }
+    .ability-card:nth-child(3) .ability-card__icon { background: var(--pink); }
+    .ability-card:nth-child(4) .ability-card__icon { background: #D9CBFF; }
+    .ability-card:nth-child(5) .ability-card__icon { background: #A9E4F0; }
+    .ability-card:nth-child(6) .ability-card__icon { background: #F3D0E2; }
+    .ability-card h3 {
+      font-size: 20px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      letter-spacing: 0;
+    }
+    .ability-card p {
+      color: var(--ink-soft);
+      font-size: 13.5px;
+      line-height: 1.75;
+    }
+    .ability-card__tag {
+      margin-top: auto;
+      padding-top: 14px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--purple-deep);
+    }
+
+    /* 工具带 */
+    .tool-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .tool-strip__item {
+      --tool-accent: #6E5BFF;
+      --tool-tint: #F0ECFF;
+      position: relative;
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      padding: 22px 20px 20px;
+      background: #fff;
+      border: 2px solid var(--line);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: transform .28s var(--ease), box-shadow .28s var(--ease);
+    }
+    .tool-strip__item:hover {
+      transform: translateY(-4px);
+      box-shadow: 6px 8px 0 var(--line);
+    }
+    .tool-strip__item:nth-child(1) { --tool-accent: #6E5BFF; --tool-tint: #EDE9FF; }
+    .tool-strip__item:nth-child(2) { --tool-accent: #2F8FC5; --tool-tint: #E4F3FB; }
+    .tool-strip__item:nth-child(3) { --tool-accent: #C43A68; --tool-tint: #FCE7EE; }
+    .tool-strip__item:nth-child(4) { --tool-accent: #B07C10; --tool-tint: #FFF3D4; }
+    .tool-strip__item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      height: 6px;
+      background: var(--tool-accent);
+    }
+    .tool-strip__item::after {
+      content: "";
+      position: absolute;
+      right: -24px;
+      bottom: -24px;
+      width: 88px;
+      height: 88px;
+      border: 2px solid var(--line);
+      border-radius: 24px;
+      background: var(--tool-tint);
+      transform: rotate(10deg);
+      opacity: .9;
+      pointer-events: none;
+    }
+    .tool-strip__label {
+      display: inline-flex;
+      align-items: center;
+      align-self: flex-start;
+      gap: 7px;
+      margin-bottom: 18px;
+      padding: 5px 11px;
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      background: var(--tool-tint);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .tool-strip__label i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--tool-accent);
+    }
+    .tool-strip__item h4 {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(21px, 1.7vw, 27px);
+      font-weight: 900;
+      line-height: 1.22;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+      color: var(--ink);
+      word-break: break-word;
+    }
+    .tool-strip__item h4 b {
+      color: var(--tool-accent);
+    }
+    .tool-strip__divider {
+      position: relative;
+      z-index: 1;
+      width: 42px;
+      height: 4px;
+      margin-bottom: 14px;
+      border-radius: 99px;
+      background: var(--tool-accent);
+    }
+    .tool-strip__item p {
+      position: relative;
+      z-index: 1;
+      margin-top: auto;
+      color: var(--ink-soft);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    /* 工作流 */
+    .workflow__steps {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .workflow__steps--wide {
+      max-width: 100%;
+      margin-top: 12px;
+    }
+    .workflow__steps--three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .workflow__step {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 16px;
+      padding: 18px 20px;
+      background: #fff;
+      border: 2px solid var(--line);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-soft);
+      transition: transform .28s var(--ease), box-shadow .28s var(--ease);
+    }
+    .workflow__step:hover { transform: translateY(-4px); box-shadow: 6px 8px 0 var(--line); }
+    .workflow__step .step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      border: 2px solid var(--line);
+      border-radius: 11px;
+      background: var(--purple);
+      color: #fff;
+      font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+    .workflow__step:nth-child(2) .step-num { background: var(--pink); }
+    .workflow__step:nth-child(3) .step-num { background: var(--yellow); color: var(--ink); }
+    .workflow__step:nth-child(4) .step-num { background: #2F8FC5; }
+    .workflow__step h4 {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0;
+      margin-bottom: 5px;
+    }
+    .workflow__step p {
+      color: var(--ink-soft);
+      font-size: 13.5px;
+      line-height: 1.7;
+    }
+    .workflow__note {
+      grid-column: 1 / -1;
+      margin-top: 4px;
+      padding: 14px 16px;
+      border: 2px dashed var(--line);
+      border-radius: var(--radius-sm);
+      background: #F5F0E1;
+      color: var(--ink-soft);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .workflow__note strong {
+      color: var(--purple-deep);
+    }
+
+    /* 结语 */
+    .takeaway {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 34px;
+      align-items: center;
+    }
+    .takeaway__mark {
+      width: min(100%, 520px);
+      aspect-ratio: 1;
+      padding: 26px;
+      border: 2px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(150deg, var(--lime), var(--yellow) 46%, var(--pink) 100%);
+      color: var(--ink);
+      box-shadow: 12px 14px 0 rgba(21, 23, 43, 0.22);
+      transform: rotate(-2deg);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .takeaway__mark .mark-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .takeaway__mark .mark-title {
+      font-size: clamp(52px, 9vw, 108px);
+      font-weight: 900;
+      line-height: .92;
+      letter-spacing: -0.06em;
+    }
+    .takeaway__mark .mark-sub {
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .takeaway__copy h3 {
+      font-size: clamp(24px, 2.7vw, 34px);
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+    .takeaway__copy p {
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.9;
+      margin-bottom: 14px;
+    }
+    .takeaway__copy p strong {
+      color: var(--purple-deep);
+    }
+
+    /* 联系 + 页脚 */
+    .cta-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 26px 28px;
+      background: #fff;
+      border: 2px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-pop);
+    }
+    .cta-strip h3 {
+      font-size: clamp(22px, 2.4vw, 32px);
+      font-weight: 900;
+    }
+    .cta-strip h3 em {
+      font-style: normal;
+      color: var(--purple);
+    }
+    .cta-strip p {
+      color: var(--ink-soft);
+      margin-top: 6px;
+      font-size: 14px;
+    }
+    .cta-strip__btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 0 20px;
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+      transition: transform .25s var(--ease), background .25s var(--ease);
+    }
+    .btn:hover { transform: translateY(-2px); background: var(--purple); }
+    .btn--light { background: var(--lime); color: var(--ink); }
+    .btn--light:hover { background: var(--purple); color: #fff; }
+
+    .footer {
+      padding: 34px 0;
+      background: var(--ink);
+      color: #fff;
+    }
+    .footer__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-size: 13px;
+    }
+    .footer__brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 15px;
+      font-weight: 900;
+    }
+    .footer__brand i {
+      width: 9px;
+      height: 9px;
+      background: var(--lime);
+      border-radius: 50%;
+    }
+    .footer__links a {
+      opacity: .68;
+      transition: opacity .2s ease;
+    }
+    .footer__links a:hover { opacity: 1; color: var(--lime); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .8s var(--ease), transform .8s var(--ease);
+    }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .ability-card.reveal.is-visible:hover,
+    .workflow__step.reveal.is-visible:hover {
+      transform: translateY(-4px);
+    }
+
+    @media (max-width: 960px) {
+      .case-hero { padding: 70px 0 58px; }
+      .case-hero__grid { grid-template-columns: 1fr; gap: 60px; }
+      .hero-art { max-width: 520px; margin: 0 auto; }
+      .section { padding: 68px 0; }
+      .abilities-grid { grid-template-columns: repeat(2, 1fr); }
+      .tool-strip { grid-template-columns: repeat(2, 1fr); }
+      .workflow__steps { grid-template-columns: 1fr; }
+      .takeaway { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    @media (max-width: 560px) {
+      .container { padding: 0 18px; }
+      .topbar__inner { grid-template-columns: auto 1fr auto; gap: 10px; }
+      .topbar__brand { font-size: 0; }
+      .topbar__brand i { width: 10px; height: 10px; }
+      .topbar__back {
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        justify-content: center;
+        font-size: 0;
+      }
+      .topbar__back::before {
+        content: "";
+        width: 15px;
+        height: 15px;
+        border-left: 2px solid var(--ink);
+        border-bottom: 2px solid var(--ink);
+        transform: translateX(2px) rotate(45deg);
+      }
+      .case-hero { padding: 58px 0 48px; }
+      .case-hero__title { font-size: 42px; }
+      .case-hero__grid { gap: 52px; }
+      .hero-art { min-height: 0; aspect-ratio: 4 / 3; }
+      .abilities-grid { grid-template-columns: 1fr; }
+      .ability-card { min-height: 0; }
+      .tool-strip { grid-template-columns: 1fr; }
+      .tool-strip__item { min-height: 210px; }
+      .workflow__step { grid-template-columns: 54px 1fr; padding: 15px; }
+      .section__head { margin-bottom: 32px; }
+      .section__title { font-size: 30px; }
+      .cta-strip { padding: 22px; }
+      .cta-strip__btns .btn { width: 100%; justify-content: center; }
+      .footer__inner { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="topbar__back" href="index.html#work">← 返回作品集</a>
+      <div class="topbar__brand"><i></i>Zongqin · 平面 &amp; AIGC</div>
+      <div class="topbar__progress" id="progress">0%</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="case-hero">
+      <div class="container">
+        <div class="case-hero__grid">
+          <div class="case-hero__copy">
+            <span class="case-hero__tag reveal"><i></i>平面设计 &amp; AIGC · 完整探索</span>
+            <h1 class="case-hero__title reveal">AI 是放大器，<br /><span>我才是判断者。</span></h1>
+            <p class="case-hero__intro reveal">
+              这套探索记录我的 AI 辅助设计方法：如何让大模型帮我做调研、发散与文案，
+              如何让 Midjourney、Stable Diffusion 一类工具产出风格素材，又如何把 AI 初稿
+              二次加工成符合品牌与业务目标的正式物料。
+            </p>
+            <div class="case-hero__tags reveal">
+              <span>AI 调研</span>
+              <span>创意发散</span>
+              <span>风格探索</span>
+              <span>AIGC 海报</span>
+              <span>KV 生成</span>
+              <span>素材精修</span>
+            </div>
+          </div>
+          <div class="hero-art reveal" aria-label="AI 生成作品展示">
+            <div class="hero-art__bg" aria-hidden="true"></div>
+            <a class="hero-art__card hero-art__card--main" href="AI图/1.jpg" target="_blank" rel="noopener" aria-label="打开 AI 生成作品">
+              <img src="平面&AIGC探索/ai-new-01.jpg" alt="AI 生成的视觉作品" loading="eager" decoding="async" />
+            </a>
+            <a class="hero-art__card hero-art__card--second" href="AI图/微信图片_20260908165007_715_134.png" target="_blank" rel="noopener" aria-label="打开第二张 AI 生成作品">
+              <img src="平面&AIGC探索/ai-new-02.jpg" alt="AI 生成的视觉作品" loading="eager" decoding="async" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 我的 AI 辅助设计能力 -->
+    <section class="section" id="capability">
+      <div class="container">
+        <div class="section__head reveal">
+          <div class="left">
+            <span class="section__kicker">✦ Capabilities · 01</span>
+            <h2 class="section__title">我的 <em>AI 辅助设计</em>能力</h2>
+          </div>
+          <p class="section__desc">从前期研究到交付前检查，AI 在每一个耗时环节作为“第一稿协作伙伴”，由我负责筛选、改写与拍板。</p>
+        </div>
+
+        <div class="abilities-grid">
+          <article class="ability-card reveal" data-index="01">
+            <div class="ability-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path><path d="M8.5 11h5M11 8.5v5"></path></svg>
+            </div>
+            <h3>AI 调研辅助</h3>
+            <p>把散乱的用户反馈按主题归类，把访谈记录整理成提纲与关键洞察，帮助我快速形成研究结论。</p>
+            <div class="ability-card__tag">反馈归类 · 访谈提纲</div>
+          </article>
+          <article class="ability-card reveal" data-index="02">
+            <div class="ability-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4"></path><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2Z"></path></svg>
+            </div>
+            <h3>AI 创意发散</h3>
+            <p>输入项目关键词获得概念方向与情绪关键词，再转化为情绪版与视觉方向的探索起点。</p>
+            <div class="ability-card__tag">关键词 · 情绪版</div>
+          </article>
+          <article class="ability-card reveal" data-index="03">
+            <div class="ability-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h7"></path><path d="m17 16 3 3 3-3"></path></svg>
+            </div>
+            <h3>AI 文案辅助</h3>
+            <p>按钮、空态、报错提示等界面文案先让 AI 给多个版本，我按语气、长度与场景继续打磨。</p>
+            <div class="ability-card__tag">按钮 · 空态 · 报错</div>
+          </article>
+          <article class="ability-card reveal" data-index="04">
+            <div class="ability-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18M8 3v6M16 15H9"></path></svg>
+            </div>
+            <h3>AI 原型辅助</h3>
+            <p>用对话描述页面目标与核心流程，让 AI 输出信息架构与线框草案，快速对齐页面结构与流程。</p>
+            <div class="ability-card__tag">页面结构 · 流程草案</div>
+          </article>
+          <article class="ability-card reveal" data-index="05">
+            <div class="ability-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg>
+            </div>
+            <h3>AIGC 视觉</h3>
+            <p>把插画、KV、图标等视觉需求拆成提示词与参考图，让生成结果承担素材与初稿，再由我精修定稿。</p>
+            <div class="ability-card__tag">插画 · KV · 图标</div>
+          </article>
+          <article class="ability-card reveal" data-index="06">
+            <div class="ability-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+            </div>
+            <h3>AI 评审辅助</h3>
+            <p>用风险清单请 AI 检查交互遗漏、文案一致性与汇报结构，让方案在提交前再经历一轮外部视角。</p>
+            <div class="ability-card__tag">风险检查 · 汇报大纲</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 我的 AI 工具箱 -->
+    <section class="section section--paper" id="toolkit">
+      <div class="container">
+        <div class="section__head reveal">
+          <div class="left">
+            <span class="section__kicker">✦ Toolkit · 02</span>
+            <h2 class="section__title">按任务<em>选工具</em>，<span>而不是追工具</span></h2>
+          </div>
+          <p class="section__desc">分析、视觉、界面与视频四个方向分别有顺手工具；它们之间不是替代关系，而是共同拼出完整流程。</p>
+        </div>
+
+        <div class="tool-strip reveal">
+          <div class="tool-strip__item">
+            <span class="tool-strip__label"><i></i>Analysis</span>
+            <h4><b>ChatGPT · Claude</b><br />豆包 · 千问</h4>
+            <span class="tool-strip__divider"></span>
+            <p>资料整理、调研归类、文案生成、风险检查与汇报大纲。</p>
+          </div>
+          <div class="tool-strip__item">
+            <span class="tool-strip__label"><i></i>Visual</span>
+            <h4><b>Midjourney · SD</b></h4>
+            <span class="tool-strip__divider"></span>
+            <p>情绪版、插画、海报主视觉、KV 与风格化图探索。</p>
+          </div>
+          <div class="tool-strip__item">
+            <span class="tool-strip__label"><i></i>UI</span>
+            <h4><b>Figma AI · MasterGo</b></h4>
+            <span class="tool-strip__divider"></span>
+            <p>AI 补全、界面草案、组件联想与设计交付一体化。</p>
+          </div>
+          <div class="tool-strip__item">
+            <span class="tool-strip__label"><i></i>Image / Video</span>
+            <h4><b>即梦</b></h4>
+            <span class="tool-strip__divider"></span>
+            <p>动态化素材、图像视频与运营物料的补充生成。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 AI × UI -->
+    <section class="section" id="ui-workflow">
+      <div class="container">
+        <div class="section__head reveal">
+          <div class="left">
+            <span class="section__kicker">✦ AI × UI · 03</span>
+            <h2 class="section__title"><em>AI × UI</em>可复用设计流程</h2>
+          </div>
+          <p class="section__desc">用生成工具先找到“感觉”，再逐步收敛为可交付的视觉语言，降低从空白画布开始的成本。</p>
+        </div>
+
+        <div class="workflow">
+          <div class="workflow__steps">
+            <article class="workflow__step reveal">
+              <span class="step-num">01</span>
+              <div>
+                <h4>AI 风格探索</h4>
+                <p>输入产品气质、受众与关键词，让 AI 生成多个视觉风格方向，圈出值得深挖的候选风格。</p>
+              </div>
+            </article>
+            <article class="workflow__step reveal">
+              <span class="step-num">02</span>
+              <div>
+                <h4>AI 情绪版</h4>
+                <p>把风格关键词视觉化为图片矩阵，从材质、光影与情绪维度整理成可沟通的情绪版。</p>
+              </div>
+            </article>
+            <article class="workflow__step reveal">
+              <span class="step-num">03</span>
+              <div>
+                <h4>AI 配色参考</h4>
+                <p>从情绪版中提取候选色卡，结合产品语义确定主色、辅助色与可访问性的色阶分配。</p>
+              </div>
+            </article>
+            <article class="workflow__step reveal">
+              <span class="step-num">04</span>
+              <div>
+                <h4>AI 图标</h4>
+                <p>让 AI 按既定风格生成图标草案，再统一网格、圆角与线宽，规范成图标组件。</p>
+              </div>
+            </article>
+            <div class="workflow__note reveal">
+              <strong>我的用法：</strong>AI 负责“多给”，我负责“收敛”。每一次生成都会带进业务判断，
+              只把通过人工筛选、复核与二次设计的部分写进正式规范。
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 AI × 视觉运营 -->
+    <section class="section section--paper" id="visual-workflow">
+      <div class="container">
+        <div class="section__head reveal">
+          <div class="left">
+            <span class="section__kicker">✦ AI × Visual · 04</span>
+            <h2 class="section__title"><em>AI × 视觉</em> 探索视觉能力的边界</h2>
+          </div>
+          <p class="section__desc">AIGC 海报与 KV 并不是“一键出图”，真正决定成品质量的是提示词策略、风格约束与二次加工。</p>
+        </div>
+
+        <div class="workflow__steps workflow__steps--wide workflow__steps--three reveal">
+          <article class="workflow__step">
+            <span class="step-num">01</span>
+            <div>
+              <h4>AIGC 海报</h4>
+              <p>先明确传播主题、目标人群与投放尺寸，再用关键词与参考图驱动 AI 生成主视觉。</p>
+            </div>
+          </article>
+          <article class="workflow__step">
+            <span class="step-num">02</span>
+            <div>
+              <h4>AI 生成 KV</h4>
+              <p>在主视觉基础上延展不同版式与比例，覆盖 B5 宣传页、易拉宝、社交物料等衍生需求。</p>
+            </div>
+          </article>
+          <article class="workflow__step">
+            <span class="step-num">03</span>
+            <div>
+              <h4>素材二次加工</h4>
+              <p>在 Figma / Photoshop 中校正构图、替换文案、修正细节、叠加品牌信息并输出印刷文件。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 我的 AI 使用原则 -->
+    <section class="section section--dark" id="principle">
+      <div class="container">
+        <div class="takeaway">
+          <div class="takeaway__mark reveal">
+            <div class="mark-top"><span>AI + Human</span><span>Workflow</span></div>
+            <div class="mark-title">AI 先做<br />我来定稿</div>
+            <div class="mark-sub">效率交给 AI · 判断留给我</div>
+          </div>
+          <div class="takeaway__copy reveal">
+            <span class="section__kicker">✦ Conclusion · 05</span>
+            <h3>AI 提升了我的资料整理、创意发散、文案生成和视觉探索效率，但它不能替代我的设计判断。</h3>
+            <p>对<strong>用户需求</strong>、<strong>业务目标</strong>、<strong>品牌调性</strong>和<strong>技术可行性</strong>的判断，
+              仍然需要设计师的经验与责任。</p>
+            <p>所以我的工作方式是把 AI 结果作为初稿和参考，再通过人工筛选、复核和二次设计完成最终方案。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="cta-strip reveal">
+        <div>
+          <h3>对这个 <em>工作流</em> 感兴趣？</h3>
+          <p>欢迎聊平面、AIGC、UI 项目，也欢迎讨论新的视觉探索。</p>
+        </div>
+        <div class="cta-strip__btns">
+          <a class="btn btn--light" href="mailto:522658400@qq.com">写邮件给我</a>
+          <a class="btn" href="index.html#contact">回到作品集</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand"><i></i>Zongqin · 平面 &amp; AIGC 探索</div>
+      <div>© 2026 何宗秦 · AI 辅助，人工定稿</div>
+      <div class="footer__links">
+        <a href="index.html">首页</a>
+        <a href="index.html#work">作品</a>
+        <a href="index.html#contact">联系</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function revealOnScroll() {
+      const items = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        items.forEach(function (el) { el.classList.add('is-visible'); });
+        return;
+      }
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      items.forEach(function (el) { io.observe(el); });
+    })();
+
+    (function updateProgress() {
+      const progress = document.getElementById('progress');
+      function draw() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const value = max > 0 ? Math.min(100, Math.round((window.scrollY / max) * 100)) : 0;
+        progress.textContent = value + '%';
+      }
+      window.addEventListener('scroll', draw, { passive: true });
+      window.addEventListener('resize', draw);
+      draw();
+    })();
+  </script>
+</body>
+</html>
