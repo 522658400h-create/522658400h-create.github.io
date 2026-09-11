@@ -3024,7 +3024,7 @@
         const tester = new Image();
         tester.onload = function () {
           // 命中，立即应用
-          imgEl.src = candidate;
+          imgEl.src = tester.src;
           imgEl.style.display = 'block';
           placeholder.style.display = 'none';
         };
